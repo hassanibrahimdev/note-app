@@ -1,0 +1,4 @@
+# Visual Studio / ASP.NET
+.vs/
+bin/
+obj/

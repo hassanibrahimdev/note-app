@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:note_app/pages/home_page/home_page.dart';
+import 'package:note_app/pages/sign_up_page/cubit/sign_up_cubit.dart';
+import 'package:note_app/pages/sign_up_page/sign_up_page.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
@@ -9,6 +16,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      routes: {
+        '/': (context) => const HomePage(),
+        '/sign-up': (context) => BlocProvider<SignUpCubit>(
+          create: (BuildContext context) {
+            return SignUpCubit();
+          },
+          child: const SignUpPage(),
+        ),
+      },
+    );
   }
 }
