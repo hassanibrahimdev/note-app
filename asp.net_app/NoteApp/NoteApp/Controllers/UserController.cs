@@ -143,6 +143,9 @@ namespace NoteApp.Controllers
             });
         }
 
+
+
+
         [HttpPost("resetpassword")]
         [Authorize]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO resetPasswordDTO, [FromServices] IValidator<ResetPasswordDTO> validator)
@@ -168,6 +171,72 @@ namespace NoteApp.Controllers
                 return BadRequest("something went wrong");
             }
 
+        }
+
+
+
+        [HttpPost("forgetpassword")]
+        public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordDTO forgetPasswordDTO, [FromServices] IValidator<ForgetPasswordDTO> validator)
+        {
+            var result = validator.Validate(forgetPasswordDTO);
+            if (!result.IsValid)
+            {
+                return BadRequest(result.Errors.First().ErrorMessage);
+            }
+            EmailCode? emailCode = await _emailCodeDb.GetEmailCode(forgetPasswordDTO.Email.Trim());
+            if (emailCode == null)
+            {
+                return BadRequest("email is incorrect!!");
+            }
+            if (emailCode.IsReaded)
+            {
+                return BadRequest("code used!!");
+            }
+            if (emailCode.ExpiredTime <= DateTimeOffset.Now.ToUnixTimeSeconds())
+            {
+                return BadRequest("Code is expired or invalid!!!");
+            }
+            if (emailCode.Code != forgetPasswordDTO.VerifyCode)
+            {
+                return BadRequest("code is incorrect!!");
+            }
+            try
+            {
+                User? user = await _userDb.ForgetPassword(forgetPasswordDTO.Email.Trim(), forgetPasswordDTO.Password.Trim());
+                if (user == null)
+                {
+                    return BadRequest("email is incorrect!!");
+                }
+                await _emailCodeDb.ChangeIsReaded(forgetPasswordDTO.Email.Trim());
+                return Ok("Password reset successfully");
+            }
+            catch (Exception)
+            {
+                return BadRequest("something went wrong");
+            }
+        }
+        [HttpDelete("deleteuser")]
+        [Authorize]
+        public async Task<IActionResult> DeleteUser()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                Unauthorized();
+            }
+            try
+            {
+                bool isDeleted = await _userDb.DeleteUser(new MongoDB.Bson.ObjectId(userId));
+                if (!isDeleted)
+                {
+                    return BadRequest("User not found");
+                }
+                return Ok("User deleted successfully");
+            }
+            catch (Exception)
+            {
+                return BadRequest("something went wrong");
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ namespace NoteApp.Validations
     {
         public VerifyEmailValidation()
         {
-            RuleFor(x => x.Email)
+            RuleFor(x => x.Email.Trim())
                 .NotEmpty().WithMessage("Email is required")
                 .EmailAddress().WithMessage("Invalid email format");
         }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:note_app/pages/forget_password_page/cubit/forget_password_cubit.dart';
+import 'package:note_app/pages/forget_password_page/forget_password_page.dart';
 import 'package:note_app/pages/home_page/home_page.dart';
 import 'package:note_app/pages/login_page/cubit/login_cubit.dart';
 import 'package:note_app/pages/login_page/login_page.dart';
@@ -36,6 +38,10 @@ class MyApp extends StatelessWidget {
           '/reset-password': (context) => BlocProvider<ResetPasswordCubit>(
             create: (BuildContext context) => ResetPasswordCubit(),
             child: const ResetPasswordPage(),
+          ),
+          '/forget-password': (context) => BlocProvider<ForgetPasswordCubit>(
+            create: (BuildContext context) => ForgetPasswordCubit(),
+            child: const ForgetPasswordPage(),
           ),
         },
       ),

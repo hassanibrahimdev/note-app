@@ -7,10 +7,10 @@ namespace NoteApp.Validations
     {
         public LoginValidation()
         {
-            RuleFor(x => x.Email)
+            RuleFor(x => x.Email.Trim())
                 .NotEmpty().WithMessage("Email is required")
                 .EmailAddress().WithMessage("Invalid email format");
-            RuleFor(x => x.Password)
+            RuleFor(x => x.Password.Trim())
                 .NotEmpty().WithMessage("Password is required")
                 .MinimumLength(6).WithMessage("Password must be at least 6 characters long");
         }

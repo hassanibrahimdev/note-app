@@ -10,6 +10,7 @@ class DrawerInitial extends DrawerState {}
 
 class DrawerLogOuted extends DrawerState {}
 
+
 class DrawerSuccess extends DrawerState {
   final String id;
   final String name;

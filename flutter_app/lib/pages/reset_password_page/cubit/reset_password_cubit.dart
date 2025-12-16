@@ -9,6 +9,22 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
   ResetPasswordCubit() : super(ResetPasswordInitial());
 
   Future<void> resetPassword(String password, String confirmPassword) async {
+    if (password.trim().isEmpty || confirmPassword.trim().isEmpty) {
+      emit(ResetPasswordMessage(message: "all fields must be filled!!"));
+      return;
+    }
+    if (password.trim().length < 8) {
+      emit(
+        ResetPasswordMessage(
+          message: "password must be at least 8 characters!!",
+        ),
+      );
+      return;
+    }
+    if (password.trim() != confirmPassword.trim()) {
+      emit(ResetPasswordMessage(message: "passwords must be the same!!"));
+      return;
+    }
     emit(ResetPasswordLoading());
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("token");

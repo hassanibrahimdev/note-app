@@ -27,14 +27,27 @@ namespace NoteApp.Services
             return u;
         }
 
-        public Task DeleteUser(ObjectId id)
+        public async Task<bool> DeleteUser(ObjectId id)
         {
-            throw new NotImplementedException();
+            User? user = await _users.Find(u => u.Id == id).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                return false;
+            }
+            await _users.DeleteOneAsync(u => u.Id == id);
+            return true;
         }
 
-        public Task ForgetPassword(string email, string password)
-        {
-            throw new NotImplementedException();
+        public async Task<User?> ForgetPassword(string email, string password)
+        { 
+            User? user = await _users.Find(u => u.Email == email.Trim()).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                return null;
+            }
+            user.Password = _passwordHasher.HashPassword(user, password);
+            await _users.ReplaceOneAsync(u => u.Email == email.Trim(), user);
+            return user;
         }
 
         public async Task<User?> GetUser(string email, string password)

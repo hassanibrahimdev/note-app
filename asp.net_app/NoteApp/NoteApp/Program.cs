@@ -59,6 +59,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<UserRegisterValidation>();
 builder.Services.AddValidatorsFromAssemblyContaining<VerifyEmailValidation>();
 builder.Services.AddValidatorsFromAssemblyContaining<ResetPasswordValidation>();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginValidation>();
+builder.Services.AddValidatorsFromAssemblyContaining<ForgetPasswordValidation>();
 
 builder.Services.AddAuthorization();
 

@@ -12,15 +12,13 @@ class DrawerPage extends StatefulWidget {
 }
 
 class _DrawerPageState extends State<DrawerPage> {
-  late final DeviceInfo _deviceInfo;
-  late final DrawerCubit _cubit;
+  late final DeviceInfo _deviceInfo = DeviceInfo(context);
+  late final DrawerCubit _cubit = context.read<DrawerCubit>();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _deviceInfo = DeviceInfo(context);
-    _cubit = context.read<DrawerCubit>();
     _cubit.checkSignUp();
   }
 
@@ -112,6 +110,12 @@ class _DrawerPageState extends State<DrawerPage> {
                         MaterialButton(
                           onPressed: () {
                             _cubit.logOut();
+                          },
+                          color: Colors.red,
+                          child: Text("Logout"),
+                        ),MaterialButton(
+                          onPressed: () {
+                            _cubit.deleteAccount();
                           },
                           color: Colors.red,
                           child: Text("Logout"),
