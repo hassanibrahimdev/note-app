@@ -16,4 +16,10 @@ class DrawerCubit extends Cubit<DrawerState> {
     String email = prefs.getString("email") ?? "";
     emit(DrawerSuccess(id: id, name: name, email: email));
   }
+
+  Future<void> logOut()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    emit(DrawerLogOuted());
+  }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app/device_info.dart';
 import 'package:note_app/pages/home_page/cubit/drawer_cubit.dart';
-import 'package:note_app/pages/home_page/cubit/drawer_state.dart';
 import 'package:note_app/pages/home_page/drawer_page.dart';
 import 'package:note_app/pages/note_page/note_page.dart';
 

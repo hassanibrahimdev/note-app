@@ -1,8 +1,11 @@
 using System.Text;
+using FluentValidation;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
+using NoteApp.DTO;
 using NoteApp.Models;
 using NoteApp.Services;
+using NoteApp.Validations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +55,10 @@ builder.Services.AddAuthentication("Bearer")
             ValidateAudience = false
         };
     });
+builder.Services.AddValidatorsFromAssemblyContaining<UserRegisterValidation>();
+builder.Services.AddValidatorsFromAssemblyContaining<VerifyEmailValidation>();
+builder.Services.AddValidatorsFromAssemblyContaining<ResetPasswordValidation>();
+builder.Services.AddValidatorsFromAssemblyContaining<LoginValidation>();
 
 builder.Services.AddAuthorization();
 

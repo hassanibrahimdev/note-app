@@ -102,6 +102,20 @@ class _DrawerPageState extends State<DrawerPage> {
                         Text(state.id),
                         Text(state.name),
                         Text(state.email),
+                        MaterialButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/reset-password');
+                          },
+                          color: Colors.redAccent,
+                          child: Text("Reset password"),
+                        ),
+                        MaterialButton(
+                          onPressed: () {
+                            _cubit.logOut();
+                          },
+                          color: Colors.red,
+                          child: Text("Logout"),
+                        ),
                       ],
                     );
                   }
@@ -123,7 +137,12 @@ class _DrawerPageState extends State<DrawerPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text("Or if you have account you can"),
-                          TextButton(onPressed: () {}, child: Text("Login")),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/login');
+                            },
+                            child: Text("Login"),
+                          ),
                         ],
                       ),
                     ],

@@ -15,9 +15,16 @@ namespace NoteApp.Services
         public async Task<EmailCode?> GetEmailCode(string email)
         {
             EmailCode code = await _emailCode.Find(e => e.Email.Equals(email.Trim())).FirstOrDefaultAsync();
+
             return code;
         }
 
+        public async Task ChangeIsReaded(string email)
+        {
+            EmailCode emailCode = await _emailCode.Find(e => e.Email.Equals(email.Trim())).FirstOrDefaultAsync();
+            emailCode.IsReaded = true;
+            await _emailCode.FindOneAndReplaceAsync(e => e.Email.Equals(email.Trim()), emailCode);
+        }
         public async Task SetEmailCode(EmailCodeModel model)
         {
             {
@@ -28,13 +35,15 @@ namespace NoteApp.Services
                     {
                         Email = model.Email.Trim(),
                         Code = model.Code.Trim(),
-                        ExpiredTime = model.ExpiredTime
+                        ExpiredTime = model.ExpiredTime,
+                        IsReaded = false
                     };
                     await _emailCode.InsertOneAsync(email);
                     return;
                 }
                 emailCode.Code = model.Code.Trim();
                 emailCode.ExpiredTime = model.ExpiredTime;
+                emailCode.IsReaded = false;
                 await _emailCode.ReplaceOneAsync(e => e.Email.Equals(model.Email), emailCode);
                 return;
             }

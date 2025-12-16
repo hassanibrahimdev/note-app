@@ -37,14 +37,29 @@ namespace NoteApp.Services
             throw new NotImplementedException();
         }
 
-        public Task<User?> GetUser(string email, string password)
+        public async Task<User?> GetUser(string email, string password)
         {
-            throw new NotImplementedException();
+            User? user = await _users.Find(u => u.Email == email.Trim()).FirstOrDefaultAsync();
+            if (user == null) {
+                return null;
+            }
+            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, password);
+            if (result == PasswordVerificationResult.Success)
+            {
+                return user;
+            }
+            return null;
         }
 
-        public Task ResetPassword(ObjectId id, string password)
+        public async Task ResetPassword(ObjectId id, string password)
         {
-            throw new NotImplementedException();
+            User? user = await _users.Find(u => u.Id == id).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                return;
+            }
+            user.Password = _passwordHasher.HashPassword(user, password);
+            await _users.ReplaceOneAsync(u => u.Id == id, user);
         }
     }
 }

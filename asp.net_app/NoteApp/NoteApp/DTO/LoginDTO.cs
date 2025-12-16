@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NoteApp.Models
+namespace NoteApp.DTO
 {
-    public class UserModel
+    public class LoginDTO
     {
-        public string Name {  get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
     }

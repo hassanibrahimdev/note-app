@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app/device_info.dart';
 import 'package:note_app/pages/sign_up_page/cubit/sign_up_cubit.dart';
 import 'package:note_app/pages/sign_up_page/cubit/sign_up_state.dart';
+import 'package:note_app/widgets/widgets.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -14,6 +15,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   late final DeviceInfo _deviceInfo;
   late final SignUpCubit _cubit;
+  final Widgets _widgets = Widgets();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -23,180 +25,174 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _deviceInfo = DeviceInfo(context);
     _cubit = context.read<SignUpCubit>();
   }
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _verifyCodeController.dispose();
+    _cubit.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocListener<SignUpCubit,SignUpState>(
+    final double w8 = _deviceInfo.width * 0.8;
+    final double w25 = _deviceInfo.width * 0.25;
+    final double h02 = _deviceInfo.height * 0.02;
+    final double h03 = _deviceInfo.height * 0.03;
+    return BlocListener<SignUpCubit, SignUpState>(
       listener: (BuildContext context, SignUpState state) {
-        if(state is SignUpSuccess){
+        if (state is SignUpSuccess) {
           Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
         }
       },
       child: Scaffold(
-        appBar: AppBar(title: Text("Sign Up")),
-        body: Center(
-          child: SingleChildScrollView(
-            child: SizedBox(
-              width: _deviceInfo.width,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: _deviceInfo.width * 0.8,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.redAccent),
-                        ),
-                        labelText: 'Name',
-                        hintText: 'Enter your name',
-                        prefixIcon: Icon(Icons.person),
+        appBar: AppBar(
+          title: Text("Sign Up"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/login');
+              },
+              child: Text("Login"),
+            ),
+          ],
+        ),
+        body: Stack(
+          children: [
+            Center(
+              child: SingleChildScrollView(
+                child: SizedBox(
+                  width: w8,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _widgets.textField(
+                        'Name',
+                        'Enter your name',
+                        const Icon(Icons.person),
+                        _nameController,
                       ),
-                      controller: _nameController,
-                    ),
-                  ),
-                  SizedBox(height: _deviceInfo.height * 0.02),
-                  SizedBox(
-                    width: _deviceInfo.width * 0.8,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.redAccent),
-                        ),
-                        labelText: 'Email',
-                        hintText: 'Enter email',
-                        prefixIcon: Icon(Icons.email),
+                      SizedBox(height: h02),
+                      _widgets.textField(
+                        'Email',
+                        'Enter email',
+                        Icon(Icons.email),
+                        _emailController,
                       ),
-                      controller: _emailController,
-                    ),
-                  ),
-                  SizedBox(height: _deviceInfo.height * 0.02),
-                  SizedBox(
-                    width: _deviceInfo.width * 0.8,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.redAccent),
-                        ),
-                        labelText: 'Password',
-                        hintText: 'Enter password',
-                        prefixIcon: Icon(Icons.password),
+                      SizedBox(height: h02),
+                      _widgets.textField(
+                        'Password',
+                        'Enter password',
+                        const Icon(Icons.password),
+                        _passwordController,
                       ),
-                      controller: _passwordController,
-                    ),
-                  ),
-                  SizedBox(height: _deviceInfo.height * 0.02),
-                  SizedBox(
-                    width: _deviceInfo.width * 0.8,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.redAccent),
-                        ),
-                        labelText: 'Confirm password',
-                        hintText: 'Enter confirm password',
-                        prefixIcon: Icon(Icons.password),
+                      SizedBox(height: h02),
+                      _widgets.textField(
+                        'Confirm password',
+                        'Enter confirm password',
+                        const Icon(Icons.password),
+                        _confirmPasswordController,
                       ),
-                      controller: _confirmPasswordController,
-                    ),
-                  ),
-                  SizedBox(height: _deviceInfo.height * 0.02),
-                  SizedBox(
-                    width: _deviceInfo.width * 0.8,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: TextField(
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.redAccent),
-                              ),
-                              labelText: 'Verify code',
-                              hintText: 'Enter verify code',
-                              prefixIcon: Icon(Icons.verified),
-                            ),
-                            controller: _verifyCodeController,
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          flex: 2,
-                          child: MaterialButton(
-                            onPressed: () {
-                              _cubit.sendVerificationCode(_emailController.text);
-                            },
-                            color: Colors.lightGreen,
-                            height: 50,
-                            child: Text(
-                              "send code",
 
+                      SizedBox(height: h02),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: _widgets.textField(
+                              'Verify code',
+                              'Enter verify code',
+                              const Icon(Icons.verified),
+                              _verifyCodeController,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            flex: 2,
+                            child: MaterialButton(
+                              onPressed: () {
+                                _cubit.sendVerificationCode(
+                                  _emailController.text,
+                                );
+                              },
+                              color: Colors.lightGreen,
+                              height: 50,
+                              child: Text("send code"),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: h03),
+                      BlocSelector<SignUpCubit, SignUpState, bool>(
+                        selector: (SignUpState state) {
+                          if (state is SignUpLoading) {
+                            return true;
+                          }
+                          return false;
+                        },
+                        builder: (BuildContext context, bool state) {
+                          return MaterialButton(
+                            onPressed: (state)
+                                ? null
+                                : () {
+                                    _cubit.signUp(
+                                      _nameController.text,
+                                      _emailController.text,
+                                      _passwordController.text,
+                                      _confirmPasswordController.text,
+                                      _verifyCodeController.text,
+                                    );
+                                  },
+                            minWidth: w25,
+                            color: Colors.amber,
+                            child: Text('Sign up'),
+                          );
+                        },
+                      ),
+
+                      SizedBox(height: h02),
+                      BlocBuilder<SignUpCubit, SignUpState>(
+                        buildWhen: (previous, current) =>
+                            current is SignUpMessage,
+                        builder: (BuildContext context, state) {
+                          final message = state is SignUpMessage
+                              ? state.message
+                              : '';
+                          return Text(
+                            message,
+                            style: TextStyle(color: Colors.red),
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                  SizedBox(height: _deviceInfo.height * 0.03),
-                  MaterialButton(
-                    onPressed: () {
-                      _cubit.signUp(
-                        _nameController.text,
-                        _emailController.text,
-                        _passwordController.text,
-                        _confirmPasswordController.text,
-                        _verifyCodeController.text,
-                      );
-                    },
-                    minWidth: _deviceInfo.width * 0.25,
-                    color: Colors.amber,
-                    child: Text(
-                      "Sign Up",
-                    ),
-                  ),
-                  SizedBox(height: _deviceInfo.height * 0.02),
-                  BlocSelector<SignUpCubit, SignUpState, String>(
-                    selector: (SignUpState state) {
-                      if (state is SignUpMessage) {
-                        return state.message;
-                      }
-                      return "";
-                    },
-                    builder: (BuildContext context, String state) {
-                      return Text(
-                        state,
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: _deviceInfo.width * 0.02,
-                        ),
-                      );
-                    },
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
+            BlocSelector<SignUpCubit, SignUpState, bool>(
+              selector: (SignUpState state) {
+                if (state is SignUpLoading) {
+                  return true;
+                }
+                return false;
+              },
+              builder: (BuildContext context, bool state) {
+                return Visibility(
+                  visible: state,
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

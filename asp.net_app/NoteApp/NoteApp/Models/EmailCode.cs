@@ -11,5 +11,6 @@ namespace NoteApp.Models
         public string Email { get; set; }
         public string Code { get; set; }
         public long ExpiredTime { get; set; }
+        public bool IsReaded { get; set; }
     }
 }

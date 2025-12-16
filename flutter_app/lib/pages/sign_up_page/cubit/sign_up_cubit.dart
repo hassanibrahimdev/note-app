@@ -40,8 +40,12 @@ class SignUpCubit extends Cubit<SignUpState> {
         return;
       }
       emit(SignUpMessage(message: "something went wrong"));
-    } catch (e) {
-      emit(SignUpMessage(message: e.toString()));
+    } on DioException catch (e) {
+      if (e.response != null) {
+        emit(SignUpMessage(message: e.response!.data));
+      } else {
+        emit(SignUpMessage(message: "Network Error: ${e.message}"));
+      }
     }
   }
 
@@ -81,7 +85,7 @@ class SignUpCubit extends Cubit<SignUpState> {
         "/User/signup",
         data: signUpModel.toJson(),
       );
-      if(response.statusCode ==200){
+      if (response.statusCode == 200) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString("token", response.data["token"]);
         await prefs.setString("id", response.data["userId"]);
@@ -91,8 +95,13 @@ class SignUpCubit extends Cubit<SignUpState> {
         return;
       }
       emit(SignUpMessage(message: "something went wrong"));
-    } catch (e) {
-      emit(SignUpMessage(message: e.toString()));
+    } on DioException catch (e) {
+      if (e.response != null) {
+        emit(SignUpMessage(message: e.response!.data));
+      } else {
+        // Network error
+        emit(SignUpMessage(message: "Network Error"));
+      }
     }
   }
 }

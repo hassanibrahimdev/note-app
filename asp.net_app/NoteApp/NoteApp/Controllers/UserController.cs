@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using NoteApp.DTO;
 using NoteApp.Models;
 using NoteApp.Services;
+using NoteApp.Validations;
 using StackExchange.Redis;
+using System.Security.Claims;
 
 namespace NoteApp.Controllers
 {
@@ -26,9 +30,14 @@ namespace NoteApp.Controllers
 
 
         [HttpPost("verifycode")]
-        public async Task<IActionResult> SendVerifyCode([FromBody] VerifyEmailDTO verifyEmailDTO)
+        public async Task<IActionResult> SendVerifyCode([FromBody] VerifyEmailDTO verifyEmailDTO, [FromServices] IValidator<VerifyEmailDTO> validator)
         {
 
+            var result = validator.Validate(verifyEmailDTO);
+            if (!result.IsValid)
+            {
+                return BadRequest(result.Errors.First().ErrorMessage);
+            }
             Random random = new();
             string verifyCode = random.Next(100000, 999999).ToString();
             try
@@ -50,13 +59,28 @@ namespace NoteApp.Controllers
             }
         }
 
+
+
+
         [HttpPost("signup")]
-        public async Task<IActionResult> signup([FromBody] UserRegisterDTO userRegisterDTO)
+        public async Task<IActionResult> Signup([FromBody] UserRegisterDTO userRegisterDTO, [FromServices] IValidator<UserRegisterDTO> validator)
         {
+            var result = validator.Validate(userRegisterDTO);
+
+            if (!result.IsValid)
+            {
+                // Return first error as plain string
+                return BadRequest(result.Errors.First().ErrorMessage);
+            }
             EmailCode? emailCode = await _emailCodeDb.GetEmailCode(userRegisterDTO.Email.Trim());
             if (emailCode == null)
             {
                 return BadRequest("email is incorrect!!");
+            }
+            if (emailCode.IsReaded)
+            {
+                return BadRequest("code used!!");
+
             }
             if (emailCode.ExpiredTime <= DateTimeOffset.Now.ToUnixTimeSeconds())
             {
@@ -74,6 +98,7 @@ namespace NoteApp.Controllers
             };
 
             User user = await _userDb.AddUser(userModel);
+            await _emailCodeDb.ChangeIsReaded(userRegisterDTO.Email.Trim());
             string token = _tokenService.createToken(user.Id.ToString());
             string userId = user.Id.ToString();
             return Ok(new
@@ -88,5 +113,61 @@ namespace NoteApp.Controllers
             });
         }
 
+
+
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO, [FromServices] IValidator<LoginDTO> validator)
+        {
+            var result = validator.Validate(loginDTO);
+            if (!result.IsValid)
+            {
+                return BadRequest(result.Errors.First().ErrorMessage);
+            }
+            User? user = await _userDb.GetUser(loginDTO.Email, loginDTO.Password);
+            if (user == null)
+            {
+                return BadRequest("email or password is incorrect!!");
+            }
+            string token = _tokenService.createToken(user.Id.ToString());
+            string userId = user.Id.ToString();
+            return Ok(new
+            {
+                userId,
+                user = new
+                {
+                    user.Name,
+                    user.Email
+                },
+                token
+            });
+        }
+
+        [HttpPost("resetpassword")]
+        [Authorize]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO resetPasswordDTO, [FromServices] IValidator<ResetPasswordDTO> validator)
+        {
+            var result = validator.Validate(resetPasswordDTO);
+            if (!result.IsValid)
+            {
+                return BadRequest(result.Errors.First().ErrorMessage);
+            }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                Unauthorized();
+            }
+            try
+            {
+                await _userDb.ResetPassword(new MongoDB.Bson.ObjectId(userId), resetPasswordDTO.Password);
+                return Ok("Password reset successfully");
+            }
+            catch (Exception)
+            {
+                return BadRequest("something went wrong");
+            }
+
+        }
     }
 }
