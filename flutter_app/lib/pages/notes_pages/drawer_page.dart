@@ -59,7 +59,9 @@ class _DrawerPageState extends State<DrawerPage> {
                           thickness: 2,
                         ),
                         MaterialButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/archived');
+                          },
                           color: Colors.grey.shade300,
                           height: _deviceInfo.height * 0.07,
                           minWidth: double.infinity,
@@ -113,12 +115,13 @@ class _DrawerPageState extends State<DrawerPage> {
                           },
                           color: Colors.red,
                           child: Text("Logout"),
-                        ),MaterialButton(
+                        ),
+                        MaterialButton(
                           onPressed: () {
                             _cubit.deleteAccount();
                           },
                           color: Colors.red,
-                          child: Text("Logout"),
+                          child: Text("Delete account"),
                         ),
                       ],
                     );

@@ -42,7 +42,7 @@ class DrawerCubit extends Cubit<DrawerState> {
       ),
     );
     final response = await dio.delete("/User/deleteuser");
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       prefs.clear();
       emit(DrawerLogOuted());
     }

@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:note_app/models/reset_password_model.dart';
 import 'package:note_app/pages/reset_password_page/cubit/reset_password_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,13 +42,12 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
       ),
     );
     try {
-      ResetPasswordModel resetPasswordModel = ResetPasswordModel(
-        password: password.trim(),
-        confirmPassword: confirmPassword.trim(),
-      );
-      final response = await dio.post(
+      final response = await dio.put(
         "/User/resetpassword",
-        data: resetPasswordModel.toJson(),
+        data: {
+          "password": password.trim(),
+          "confirmPassword": confirmPassword.trim(),
+        },
       );
       if (response.statusCode == 200) {
         emit(ResetPasswordSuccess());

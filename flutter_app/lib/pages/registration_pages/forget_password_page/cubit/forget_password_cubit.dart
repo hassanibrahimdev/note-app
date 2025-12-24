@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:note_app/models/forget_password_model.dart';
-import 'package:note_app/models/verify_email_model.dart';
 import 'package:note_app/pages/forget_password_page/cubit/forget_password_state.dart';
 
 class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
@@ -28,12 +26,9 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
     }
     emit(ForgetPasswordLoading());
     try {
-      final VerifyEmailModel verifyEmailModel = VerifyEmailModel(
-        email: email.trim(),
-      );
       final response = await dio.post(
         "/User/verifycode",
-        data: verifyEmailModel.toJson(),
+        data: {"email": email.trim()},
       );
       if (response.statusCode == 200) {
         emit(ForgetPasswordMessage(message: 'Code send successfully'));
@@ -80,15 +75,14 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
     }
     emit(ForgetPasswordLoading());
     try {
-      final ForgetPasswordModel forgetPasswordModel = ForgetPasswordModel(
-        email: email.trim(),
-        password: password.trim(),
-        confirmPassword: confirmPassword.trim(),
-        verifyCode: verifyCode.trim(),
-      );
-      final response = await dio.post(
+      final response = await dio.put(
         "/User/forgetpassword",
-        data: forgetPasswordModel.toJson(),
+        data: {
+          "email": email.trim(),
+          "password": password.trim(),
+          "confirmPassword": confirmPassword.trim(),
+          "verifyCode": verifyCode.trim(),
+        },
       );
       if (response.statusCode == 200) {
         emit(ForgetPasswordSuccess());

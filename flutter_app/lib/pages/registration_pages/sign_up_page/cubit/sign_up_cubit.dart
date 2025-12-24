@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:note_app/models/sign_up_model.dart';
-import 'package:note_app/models/verify_email_model.dart';
 import 'package:note_app/pages/sign_up_page/cubit/sign_up_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,10 +28,9 @@ class SignUpCubit extends Cubit<SignUpState> {
     }
     emit(SignUpLoading());
     try {
-      final verifyEmailModel = VerifyEmailModel(email: email);
       final response = await _dio.post(
         "/User/verifycode",
-        data: verifyEmailModel.toJson(),
+        data: {"email": email.trim()},
       );
       if (response.statusCode == 200) {
         emit(SignUpMessage(message: 'Code send successfully'));
@@ -74,16 +71,15 @@ class SignUpCubit extends Cubit<SignUpState> {
     }
     emit(SignUpLoading());
     try {
-      SignUpModel signUpModel = SignUpModel(
-        name: name.trim(),
-        email: email.trim(),
-        password: password.trim(),
-        confirmPassword: confirmPassword.trim(),
-        verifyCode: verifyCode.trim(),
-      );
       final response = await _dio.post(
         "/User/signup",
-        data: signUpModel.toJson(),
+        data: {
+          "name": name.trim(),
+          "email": email.trim(),
+          "password": password.trim(),
+          "confirmPassword": confirmPassword.trim(),
+          "verifyCode": verifyCode.trim(),
+        },
       );
       if (response.statusCode == 200) {
         SharedPreferences prefs = await SharedPreferences.getInstance();

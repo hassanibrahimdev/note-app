@@ -73,9 +73,12 @@ class _LoginPageState extends State<LoginPage> {
                         _passwordController,
                       ),
                       SizedBox(height: height * 0.02),
-                      TextButton(onPressed: (){
-                        Navigator.pushNamed(context, '/forget-password');
-                      },child: Text("forget password"),),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/forget-password');
+                        },
+                        child: Text("forget password"),
+                      ),
                       SizedBox(height: height * 0.03),
                       BlocSelector<LoginCubit, LoginState, bool>(
                         selector: (LoginState state) {
