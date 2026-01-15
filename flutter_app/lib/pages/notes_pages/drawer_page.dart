@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app/device_info.dart';
-import 'package:note_app/pages/home_page/cubit/drawer_cubit.dart';
-import 'package:note_app/pages/home_page/cubit/drawer_state.dart';
+import 'package:note_app/pages/notes_pages/cubit/drawer_cubit.dart';
+import 'package:note_app/pages/notes_pages/cubit/drawer_state.dart';
+import 'package:note_app/pages/notes_pages/cubit/note_cubit.dart';
 
 class DrawerPage extends StatefulWidget {
   const DrawerPage({super.key});
@@ -14,6 +15,7 @@ class DrawerPage extends StatefulWidget {
 class _DrawerPageState extends State<DrawerPage> {
   late final DeviceInfo _deviceInfo = DeviceInfo(context);
   late final DrawerCubit _cubit = context.read<DrawerCubit>();
+  late final NoteCubit _noteCubit = context.read<NoteCubit>();
 
   @override
   void initState() {
@@ -47,7 +49,11 @@ class _DrawerPageState extends State<DrawerPage> {
                     child: Column(
                       children: [
                         MaterialButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            await Navigator.pushNamed(context, '/favorites');
+                            _noteCubit.cancel();
+                            _noteCubit.getNotes();
+                          },
                           color: Colors.grey.shade300,
                           minWidth: double.infinity,
                           height: _deviceInfo.height * 0.07,
@@ -59,8 +65,10 @@ class _DrawerPageState extends State<DrawerPage> {
                           thickness: 2,
                         ),
                         MaterialButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/archived');
+                          onPressed: () async {
+                            await Navigator.pushNamed(context, '/archived');
+                            _noteCubit.cancel();
+                            _noteCubit.getNotes();
                           },
                           color: Colors.grey.shade300,
                           height: _deviceInfo.height * 0.07,
@@ -73,7 +81,11 @@ class _DrawerPageState extends State<DrawerPage> {
                           thickness: 2,
                         ),
                         MaterialButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            await Navigator.pushNamed(context, '/trash');
+                            _noteCubit.cancel();
+                            _noteCubit.getNotes();
+                          },
                           color: Colors.grey.shade300,
                           height: _deviceInfo.height * 0.07,
                           minWidth: double.infinity,

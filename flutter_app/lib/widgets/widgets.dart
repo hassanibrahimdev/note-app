@@ -21,4 +21,39 @@ class Widgets {
     );
   }
 
+  AlertDialog alert(String message, BuildContext context) {
+    return AlertDialog(
+      content: Text(message),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text("OK"),
+        ),
+      ],
+    );
+  }
+
+  Row actionInAppBar(
+    VoidCallback cancel,
+    VoidCallback moveToTrash,
+    VoidCallback archive,
+    Icon archiveIcon,
+  ) {
+    return Row(
+      children: [
+        IconButton(onPressed: moveToTrash, icon: Icon(Icons.delete_outline)),
+        IconButton(onPressed: archive, icon: archiveIcon),
+
+        IconButton(onPressed: () {}, icon: Icon(Icons.backup_outlined)),
+        IconButton(
+          onPressed: () {
+            cancel();
+          },
+          icon: Icon(Icons.cancel_outlined),
+        ),
+      ],
+    );
+  }
 }

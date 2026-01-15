@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app/device_info.dart';
-import 'package:note_app/pages/login_page/cubit/login_cubit.dart';
-import 'package:note_app/pages/login_page/cubit/login_state.dart';
+import 'package:note_app/pages/registration_pages/login_page/cubit/login_cubit.dart';
+import 'package:note_app/pages/registration_pages/login_page/cubit/login_state.dart';
 import 'package:note_app/widgets/widgets.dart';
 
 class LoginPage extends StatefulWidget {

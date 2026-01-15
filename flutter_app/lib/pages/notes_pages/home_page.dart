@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:note_app/pages/home_page/cubit/drawer_cubit.dart';
-import 'package:note_app/pages/home_page/drawer_page.dart';
-import 'package:note_app/pages/main_cubit/note_cubit.dart';
-import 'package:note_app/pages/main_cubit/note_state.dart';
-
-import 'note_page.dart';
+import 'package:note_app/database/note.dart';
+import 'package:note_app/pages/notes_pages/cubit/drawer_cubit.dart';
+import 'package:note_app/pages/notes_pages/cubit/note_cubit.dart';
+import 'package:note_app/pages/notes_pages/cubit/note_state.dart';
+import 'package:note_app/pages/notes_pages/drawer_page.dart';
+import 'package:note_app/pages/notes_pages/note_page.dart';
+import 'package:note_app/widgets/widgets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,8 +15,9 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   late final NoteCubit _noteCubit = context.read<NoteCubit>();
+  late final Widgets _widget = Widgets();
 
   @override
   void initState() {
@@ -40,35 +42,11 @@ class _HomePageState extends State<HomePage> {
             builder: (BuildContext context, NoteState state) {
               if (state is SelectNote) {
                 if (state.ids.isNotEmpty) {
-                  return Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.delete_outline),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          _noteCubit.archiveNotes();
-                        },
-                        icon: Icon(Icons.archive_outlined),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          _noteCubit.unarchiveNotes();
-                        },
-                        icon: Icon(Icons.unarchive_outlined),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.backup_outlined),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          _noteCubit.cancel();
-                        },
-                        icon: Icon(Icons.cancel_outlined),
-                      ),
-                    ],
+                  return _widget.actionInAppBar(
+                    _noteCubit.cancel,
+                    _noteCubit.moveToTrash,
+                    _noteCubit.archiveNotes,
+                    Icon(Icons.archive_outlined),
                   );
                 }
                 return SizedBox();
@@ -78,7 +56,20 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: const NotePage(),
+      body: BlocBuilder<NoteCubit, NoteState>(
+        buildWhen: (previous, current) => current is NoteSuccess,
+        builder: (BuildContext context, NoteState state) {
+          if (state is NoteSuccess) {
+            List<Note> notes = state.notes
+                .where((note) => (!note.isDeleted && !note.isArchived))
+                .toList();
+            return notes.isEmpty
+                ? Center(child: Text("No notes"))
+                : NotePage(notes: notes);
+          }
+          return Center(child: CircularProgressIndicator());
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, '/add-note');

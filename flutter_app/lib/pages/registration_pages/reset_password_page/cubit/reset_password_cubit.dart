@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:note_app/pages/reset_password_page/cubit/reset_password_state.dart';
+import 'package:note_app/pages/registration_pages/reset_password_page/cubit/reset_password_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ResetPasswordCubit extends Cubit<ResetPasswordState> {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app/device_info.dart';
-import 'package:note_app/pages/add_note_page/cubit/add_note_cubit.dart';
-import 'package:note_app/pages/add_note_page/cubit/add_note_state.dart';
+import 'package:note_app/pages/notes_pages/add_note_page/cubit/add_note_cubit.dart';
+import 'package:note_app/pages/notes_pages/add_note_page/cubit/add_note_state.dart';
 import 'package:note_app/widgets/widgets.dart';
 
 class AddNotePage extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:note_app/pages/home_page/cubit/drawer_state.dart';
+import 'package:note_app/pages/notes_pages/cubit/drawer_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerCubit extends Cubit<DrawerState> {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app/device_info.dart';
-import 'package:note_app/pages/forget_password_page/cubit/forget_password_cubit.dart';
-import 'package:note_app/pages/forget_password_page/cubit/forget_password_state.dart';
+import 'package:note_app/pages/registration_pages/forget_password_page/cubit/forget_password_cubit.dart';
+import 'package:note_app/pages/registration_pages/forget_password_page/cubit/forget_password_state.dart';
 import 'package:note_app/widgets/widgets.dart';
 
 class ForgetPasswordPage extends StatefulWidget {

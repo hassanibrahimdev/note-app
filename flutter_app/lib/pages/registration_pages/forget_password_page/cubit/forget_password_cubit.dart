@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:note_app/pages/forget_password_page/cubit/forget_password_state.dart';
+import 'package:note_app/pages/registration_pages/forget_password_page/cubit/forget_password_state.dart';
 
 class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
   final Dio dio = Dio(

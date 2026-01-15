@@ -146,7 +146,7 @@ namespace NoteApp.Controllers
 
 
 
-        [HttpPost("resetpassword")]
+        [HttpPut("resetpassword")]
         [Authorize]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO resetPasswordDTO, [FromServices] IValidator<ResetPasswordDTO> validator)
         {
@@ -175,7 +175,7 @@ namespace NoteApp.Controllers
 
 
 
-        [HttpPost("forgetpassword")]
+        [HttpPut("forgetpassword")]
         public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordDTO forgetPasswordDTO, [FromServices] IValidator<ForgetPasswordDTO> validator)
         {
             var result = validator.Validate(forgetPasswordDTO);

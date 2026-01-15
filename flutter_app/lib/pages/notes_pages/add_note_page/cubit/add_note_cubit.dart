@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app/database/note.dart';
 import 'package:note_app/database/note_database.dart';
-import 'package:note_app/pages/add_note_page/cubit/add_note_state.dart';
+import 'package:note_app/pages/notes_pages/add_note_page/cubit/add_note_state.dart';
 import 'package:ulid/ulid.dart';
 
 class AddNoteCubit extends Cubit<AddNoteState> {

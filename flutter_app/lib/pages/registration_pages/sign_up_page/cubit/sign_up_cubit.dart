@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:note_app/pages/sign_up_page/cubit/sign_up_state.dart';
+import 'package:note_app/pages/registration_pages/sign_up_page/cubit/sign_up_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpCubit extends Cubit<SignUpState> {
