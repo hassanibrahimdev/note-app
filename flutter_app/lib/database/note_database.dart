@@ -49,7 +49,9 @@ class NoteDatabase {
     final db = await DatabaseHelper.instance.database;
     String placeholders = List.filled(ids.length, "?").join(",");
     int deletedAt =
-        DateTime.now().millisecondsSinceEpoch + 1 * 60 * 1000;
+        DateTime
+            .now()
+            .millisecondsSinceEpoch + 1 * 60 * 1000;
     await db.update(
       'notes',
       {'is_deleted': 1, 'deleted_at': deletedAt},
@@ -74,4 +76,16 @@ class NoteDatabase {
     String placeholders = List.filled(ids.length, "?").join(",");
     await db.delete('notes', where: "id IN ($placeholders)", whereArgs: ids);
   }
+
+  Future<void> syncData(List<String> notes) async {
+    final db = await DatabaseHelper.instance.database;
+    String placeholders = List.filled(notes.length, "?").join(",");
+    await db.update(
+      'notes',
+      {'is_synced': 1},
+      where: "id IN ($placeholders)",
+      whereArgs: notes,
+    );
+  }
+
 }

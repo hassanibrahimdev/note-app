@@ -41,6 +41,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                     _noteCubit.cancel,
                     _noteCubit.moveToTrash,
                     _noteCubit.archiveNotes,
+                    _noteCubit.syncData,
                     Icon(Icons.archive_outlined),
                   );
                 }

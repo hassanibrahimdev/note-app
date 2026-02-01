@@ -1,8 +1,8 @@
+import 'package:bson/bson.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app/database/note.dart';
 import 'package:note_app/database/note_database.dart';
 import 'package:note_app/pages/notes_pages/add_note_page/cubit/add_note_state.dart';
-import 'package:ulid/ulid.dart';
 
 class AddNoteCubit extends Cubit<AddNoteState> {
   AddNoteCubit() : super(AddNoteInitial());
@@ -17,15 +17,13 @@ class AddNoteCubit extends Cubit<AddNoteState> {
     try {
       await noteDatabase.insertNote(
         Note(
-          id: Ulid().toString(),
+          id: ObjectId().oid,
           title: title.trim(),
           content: content,
           isFavorite: false,
           isArchived: false,
           isDeleted: false,
           createdAt: createdAt,
-          updatedAt: createdAt,
-          isUpdated: false,
           deletedAt: null,
         ),
       );

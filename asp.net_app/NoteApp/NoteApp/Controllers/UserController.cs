@@ -155,11 +155,11 @@ namespace NoteApp.Controllers
             {
                 return BadRequest(result.Errors.First().ErrorMessage);
             }
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirst("id")?.Value;
 
             if (userId == null)
             {
-                Unauthorized();
+                return Unauthorized();
             }
             try
             {
@@ -219,10 +219,10 @@ namespace NoteApp.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteUser()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirst("id")?.Value;
             if (userId == null)
             {
-                Unauthorized();
+                return Unauthorized();
             }
             try
             {

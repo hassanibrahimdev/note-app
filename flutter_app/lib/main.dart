@@ -6,6 +6,8 @@ import 'package:note_app/database/note_database.dart';
 import 'package:note_app/pages/notes_pages/add_note_page/add_note_page.dart';
 import 'package:note_app/pages/notes_pages/add_note_page/cubit/add_note_cubit.dart';
 import 'package:note_app/pages/notes_pages/archived_page.dart';
+import 'package:note_app/pages/notes_pages/backup_page.dart';
+import 'package:note_app/pages/notes_pages/cubit/backup_cubit.dart';
 import 'package:note_app/pages/notes_pages/cubit/note_cubit.dart';
 import 'package:note_app/pages/notes_pages/favorites_page.dart';
 import 'package:note_app/pages/notes_pages/home_page.dart';
@@ -29,7 +31,8 @@ Future<void> main() async {
 Future<void> deleteNote() async {
   List<Note> notes = await NoteDatabase().getAllNotes();
   for (Note note in notes) {
-    if (note.isDeleted && note.deletedAt! < DateTime.now().millisecondsSinceEpoch) {
+    if (note.isDeleted &&
+        note.deletedAt! < DateTime.now().millisecondsSinceEpoch) {
       await NoteDatabase().deleteNotes([note.id]);
     }
   }
@@ -79,6 +82,10 @@ class MyApp extends StatelessWidget {
           '/trash': (context) => BlocProvider<NoteCubit>(
             create: (BuildContext context) => NoteCubit(),
             child: const TrashPage(),
+          ),
+          '/backup': (context) => BlocProvider<BackupCubit>(
+            create: (BuildContext context) => BackupCubit(),
+            child: const BackupPage(),
           ),
         },
       ),

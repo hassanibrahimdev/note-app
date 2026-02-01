@@ -30,9 +30,10 @@ class ErrorState extends NoteState {
 
 class SelectNote extends NoteState {
   final List<String> ids;
+  final bool selectAll;
 
-  SelectNote(this.ids);
+  SelectNote(this.ids, {required this.selectAll});
 
   @override
-  List<Object?> get props => [ids];
+  List<Object?> get props => [ids, selectAll];
 }

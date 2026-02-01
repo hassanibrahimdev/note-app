@@ -17,119 +17,169 @@ class _NotePageState extends State<NotePage> {
   late final NoteCubit _noteCubit = context.read<NoteCubit>();
 
   @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      itemBuilder: (context, index) {
-        final dateTime = DateTime.fromMillisecondsSinceEpoch(
-          widget.notes[index].createdAt,
-        );
-        return Container(
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                flex: 5,
-                child: InkWell(
-                  onLongPress: () {
-                    _noteCubit.addOrRemoveNotesToUpdate(widget.notes[index].id);
-                  },
-                  onTap: () {
-                    if (_noteCubit.notesToUpdate.isNotEmpty) {
-                      _noteCubit.addOrRemoveNotesToUpdate(
-                        widget.notes[index].id,
-                      );
-                      return;
-                    }
-                  },
-                  child: Row(
-                    children: [
-                      BlocBuilder<NoteCubit, NoteState>(
-                        buildWhen: (previous, current) => current is SelectNote,
-                        builder: (BuildContext context, NoteState state) {
-                          if (state is SelectNote) {
-                            if (state.ids.isEmpty) {
-                              return SizedBox();
-                            }
-                            return Row(
-                              children: [
-                                Icon(
-                                  (state.ids.contains(widget.notes[index].id))
-                                      ? Icons.check_box
-                                      : Icons.check_box_outline_blank,
-                                ),
-                                SizedBox(width: 10),
-                              ],
-                            );
-                          }
-                          return SizedBox();
-                        },
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.notes[index].title.substring(
-                                0,
-                                (widget.notes[index].title.length < 15)
-                                    ? widget.notes[index].title.length
-                                    : 15,
-                              ),
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              widget.notes[index].content.substring(
-                                0,
-                                (widget.notes[index].content.length < 10)
-                                    ? widget.notes[index].content.length
-                                    : 10,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Column(
-                          children: [
-                            Text(
-                              "${dateTime.year}-${dateTime.month}-${dateTime.day}",
-                            ),
-                            Text(
-                              "${dateTime.hour}:${dateTime.minute}:${dateTime.second}",
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+  void initState() {
+    super.initState();
+  }
 
-              IconButton(
-                onPressed: () {
-                  _noteCubit.addOrRemoveFavorite(widget.notes[index].id);
-                },
-                icon: Icon(
-                  (widget.notes[index].isFavorite)
-                      ? Icons.favorite
-                      : Icons.favorite_border,
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        BlocBuilder<NoteCubit, NoteState>(
+          buildWhen: (previous, current) => current is SelectNote,
+          builder: (BuildContext context, NoteState state) {
+            if (state is SelectNote) {
+              if (state.ids.isNotEmpty) {
+                return Row(
+                  children: [
+                    Checkbox(
+                      value: _noteCubit.selectAll,
+                      onChanged: (value) {
+                        _noteCubit.selectAll = value!;
+                        if (_noteCubit.selectAll) {
+                          _noteCubit.selectAllNotes();
+                        } else {
+                          _noteCubit.cancel();
+                        }
+                      },
+                    ),
+                    const Text("Select All"),
+                  ],
+                );
+              }
+              return const SizedBox();
+            }
+            return const SizedBox();
+          },
+        ),
+        Expanded(
+          child: ListView.separated(
+            itemBuilder: (context, index) {
+              final dateTime = DateTime.fromMillisecondsSinceEpoch(
+                widget.notes[index].createdAt,
+              );
+              return Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
                 ),
-              ),
-            ],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: InkWell(
+                        onLongPress: () {
+                          _noteCubit.addOrRemoveNotesToUpdate(
+                            widget.notes[index].id,
+                            widget.notes,
+                          );
+                        },
+                        onTap: () {
+                          if (_noteCubit.notesToUpdate.isNotEmpty) {
+                            _noteCubit.addOrRemoveNotesToUpdate(
+                              widget.notes[index].id,
+                              widget.notes,
+                            );
+                            return;
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            BlocBuilder<NoteCubit, NoteState>(
+                              buildWhen: (previous, current) =>
+                              current is SelectNote,
+                              builder: (BuildContext context, NoteState state) {
+                                if (state is SelectNote) {
+                                  if (state.ids.isEmpty) {
+                                    return SizedBox();
+                                  }
+                                  return Row(
+                                    children: [
+                                      Icon(
+                                        (state.ids.contains(
+                                          widget.notes[index].id,
+                                        ))
+                                            ? Icons.check_box
+                                            : Icons.check_box_outline_blank,
+                                      ),
+                                      SizedBox(width: 10),
+                                    ],
+                                  );
+                                }
+                                return SizedBox();
+                              },
+                            ),
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.notes[index].title.substring(
+                                      0,
+                                      (widget.notes[index].title.length < 15)
+                                          ? widget.notes[index].title.length
+                                          : 15,
+                                    ),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    widget.notes[index].content.substring(
+                                      0,
+                                      (widget.notes[index].content.length < 10)
+                                          ? widget.notes[index].content.length
+                                          : 10,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            Expanded(
+                              flex: 2,
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "${dateTime.year}-${dateTime
+                                        .month}-${dateTime.day}",
+                                  ),
+                                  Text(
+                                    "${dateTime.hour}:${dateTime
+                                        .minute}:${dateTime.second}",
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    IconButton(
+                      onPressed: () {
+                        _noteCubit.addOrRemoveFavorite(widget.notes[index].id);
+                      },
+                      icon: Icon(
+                        (widget.notes[index].isFavorite)
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return Divider(color: Colors.grey);
+            },
+            itemCount: widget.notes.length,
           ),
-        );
-      },
-      separatorBuilder: (context, index) {
-        return Divider(color: Colors.grey);
-      },
-      itemCount: widget.notes.length,
+        ),
+      ],
     );
   }
 }

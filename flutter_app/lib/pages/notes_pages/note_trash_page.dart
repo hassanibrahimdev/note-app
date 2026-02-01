@@ -36,12 +36,16 @@ class _NoteTrashPageState extends State<NoteTrashPage> {
                 flex: 5,
                 child: InkWell(
                   onLongPress: () {
-                    _noteCubit.addOrRemoveNotesToUpdate(widget.notes[index].id);
+                    _noteCubit.addOrRemoveNotesToUpdate(
+                      widget.notes[index].id,
+                      widget.notes,
+                    );
                   },
                   onTap: () {
                     if (_noteCubit.notesToUpdate.isNotEmpty) {
                       _noteCubit.addOrRemoveNotesToUpdate(
                         widget.notes[index].id,
+                        widget.notes,
                       );
                     }
                   },

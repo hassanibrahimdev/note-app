@@ -46,6 +46,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     _noteCubit.cancel,
                     _noteCubit.moveToTrash,
                     _noteCubit.archiveNotes,
+                    _noteCubit.syncData,
                     Icon(Icons.archive_outlined),
                   );
                 }

@@ -41,6 +41,7 @@ class _ArchivedPageState extends State<ArchivedPage> {
                     _noteCubit.cancel,
                     _noteCubit.moveToTrash,
                     _noteCubit.unarchiveNotes,
+                    _noteCubit.syncData,
                     Icon(Icons.unarchive_outlined),
                   );
                 }

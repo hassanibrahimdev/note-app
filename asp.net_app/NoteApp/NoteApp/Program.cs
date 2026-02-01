@@ -60,6 +60,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<VerifyEmailValidation>();
 builder.Services.AddValidatorsFromAssemblyContaining<ResetPasswordValidation>();
 builder.Services.AddValidatorsFromAssemblyContaining<LoginValidation>();
 builder.Services.AddValidatorsFromAssemblyContaining<ForgetPasswordValidation>();
+builder.Services.AddValidatorsFromAssemblyContaining<AddNoteValidation>();
 
 builder.Services.AddAuthorization();
 
@@ -73,6 +74,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddSingleton<IUserDb, UserDb>();
+builder.Services.AddSingleton<INoteDb, NoteDb>();
 builder.Services.AddSingleton<ISendEmail, SendEmail>();
 builder.Services.AddSingleton<IEmailCodeDb,EmailCodeDb>();
 builder.Services.AddSingleton<TokenService>();

@@ -39,6 +39,7 @@ class Widgets {
     VoidCallback cancel,
     VoidCallback moveToTrash,
     VoidCallback archive,
+    Future<void> Function() syncData,
     Icon archiveIcon,
   ) {
     return Row(
@@ -46,13 +47,8 @@ class Widgets {
         IconButton(onPressed: moveToTrash, icon: Icon(Icons.delete_outline)),
         IconButton(onPressed: archive, icon: archiveIcon),
 
-        IconButton(onPressed: () {}, icon: Icon(Icons.backup_outlined)),
-        IconButton(
-          onPressed: () {
-            cancel();
-          },
-          icon: Icon(Icons.cancel_outlined),
-        ),
+        IconButton(onPressed: syncData, icon: Icon(Icons.backup_outlined)),
+        IconButton(onPressed: cancel, icon: Icon(Icons.cancel_outlined)),
       ],
     );
   }

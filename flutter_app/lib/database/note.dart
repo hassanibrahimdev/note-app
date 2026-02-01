@@ -6,8 +6,6 @@ class Note {
   final bool isArchived;
   final bool isDeleted;
   final int createdAt;
-  final int updatedAt;
-  final bool isUpdated;
   final int? deletedAt;
 
   Note({
@@ -18,8 +16,6 @@ class Note {
     required this.isArchived,
     required this.isDeleted,
     required this.createdAt,
-    required this.updatedAt,
-    required this.isUpdated,
     required this.deletedAt,
   });
 
@@ -31,8 +27,6 @@ class Note {
     bool? isArchived,
     bool? isDeleted,
     int? createdAt,
-    int? updatedAt,
-    bool? isUpdated,
     int? deletedAt,
   }) {
     return Note(
@@ -44,8 +38,6 @@ class Note {
       isDeleted: isDeleted ?? this.isDeleted,
       deletedAt: deletedAt ?? this.deletedAt,
       createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      isUpdated: isUpdated ?? this.isUpdated,
     );
   }
 
@@ -59,8 +51,6 @@ class Note {
       'is_deleted': isDeleted ? 1 : 0,
       'deleted_at': deletedAt,
       'created_at': createdAt,
-      'updated_at': updatedAt,
-      'is_updated': isUpdated ? 1 : 0,
     };
   }
 
@@ -74,8 +64,6 @@ class Note {
       isDeleted: map['is_deleted'] == 1,
       deletedAt: map['deleted_at'],
       createdAt: map['created_at'],
-      updatedAt: map['updated_at'],
-      isUpdated: map['is_updated'] == 1,
     );
   }
 }

@@ -34,9 +34,7 @@ class DatabaseHelper {
         is_archived INTEGER DEFAULT 0,
         is_deleted INTEGER DEFAULT 0,
         deleted_at INTEGER DEFAULT NULL,
-        created_at INTEGER,
-        updated_at INTEGER,
-        is_updated INTEGER DEFAULT 0
+        created_at INTEGER
       )
     ''');
   }

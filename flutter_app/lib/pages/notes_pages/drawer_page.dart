@@ -91,6 +91,22 @@ class _DrawerPageState extends State<DrawerPage> {
                           minWidth: double.infinity,
                           child: Text("Trash"),
                         ),
+                        Divider(
+                          color: Colors.black,
+                          height: _deviceInfo.height * 0.01,
+                          thickness: 2,
+                        ),
+                        MaterialButton(
+                          onPressed: () async {
+                            await Navigator.pushNamed(context, '/backup');
+                            _noteCubit.cancel();
+                            _noteCubit.getNotes();
+                          },
+                          color: Colors.grey.shade300,
+                          height: _deviceInfo.height * 0.07,
+                          minWidth: double.infinity,
+                          child: Text("Backup"),
+                        ),
                       ],
                     ),
                   ),

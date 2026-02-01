@@ -9,11 +9,14 @@ namespace NoteApp.Models
     {
         [BsonId]
         public ObjectId Id { get; set; }
+        public string NoteId { get; set; }
         [BsonElement("userId")]
         public ObjectId UserId { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public DateTime IsDeleted { get; set; }
-        
+        public DateTime CreatedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
+        public bool IsDeleted { get; set; }
+
     }
 }
